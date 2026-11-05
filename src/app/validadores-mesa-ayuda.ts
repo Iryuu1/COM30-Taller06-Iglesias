@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormArray, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export const noSoloEspacios: ValidatorFn = (
   control: AbstractControl,
@@ -16,3 +16,9 @@ export const impactoSiCritico: ValidatorFn = (
     ? { impactoRequerido: true }
     : null;
 };
+
+export const minimoEquipos = (cantidad: number): ValidatorFn =>
+  (control: AbstractControl): ValidationErrors | null =>
+    (control as FormArray).length >= cantidad
+      ? null
+      : { minimoEquipos: { requerido: cantidad } };

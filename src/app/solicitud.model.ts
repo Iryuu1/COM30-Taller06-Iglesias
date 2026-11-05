@@ -8,5 +8,11 @@ export interface Solicitud {
   prioridad: string;
   descripcion: string;
   impacto: string;
+  equipos: EquipoAfectado[];
   estado: EstadoSolicitud;
+}
+
+export interface EquipoAfectado {
+  codigo: string;
+  ubicacion: string;
 }

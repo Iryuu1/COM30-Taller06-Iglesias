@@ -30,6 +30,27 @@
       </label>
       <label>Impacto si la prioridad es crítica<textarea formControlName="impacto" rows="2" placeholder="¿A quién afecta y qué servicio se detuvo?"></textarea></label>
       @if (form.hasError('impactoRequerido') && (form.touched || form.dirty)) { <small class="group-error">Para una prioridad crítica, describe el impacto.</small> }
+      <section class="equipment" formArrayName="equipos">
+        <div class="equipment-heading"><h3>Equipos afectados</h3><button type="button" class="secondary" (click)="agregarEquipo()">Agregar equipo</button></div>
+        @for (equipo of equipos.controls; track equipo; let i = $index) {
+          <div class="equipment-row" [formGroupName]="i">
+            <label>Código del equipo<input formControlName="codigo" placeholder="EQ-001" />
+              @if (controlEquipo(i).controls.codigo.invalid && (controlEquipo(i).controls.codigo.touched || controlEquipo(i).controls.codigo.dirty)) {
+                @if (controlEquipo(i).controls.codigo.hasError('required')) { <small>Escribe el código.</small> }
+                @else if (controlEquipo(i).controls.codigo.hasError('pattern')) { <small>Usa el formato EQ-001.</small> }
+              }
+            </label>
+            <label>Ubicación<input formControlName="ubicacion" placeholder="Sala 204" />
+              @if (controlEquipo(i).controls.ubicacion.invalid && (controlEquipo(i).controls.ubicacion.touched || controlEquipo(i).controls.ubicacion.dirty)) {
+                @if (controlEquipo(i).controls.ubicacion.hasError('required')) { <small>Escribe la ubicación.</small> }
+                @else if (controlEquipo(i).controls.ubicacion.hasError('minlength')) { <small>Usa al menos 2 caracteres.</small> }
+                @else if (controlEquipo(i).controls.ubicacion.hasError('soloEspacios')) { <small>La ubicación no puede ser solo espacios.</small> }
+              }
+            </label>
+            <button type="button" class="remove" (click)="quitarEquipo(i)" [disabled]="equipos.length === 1">Quitar</button>
+          </div>
+        } @empty { <small class="group-error">Agrega al menos un equipo.</small> }
+      </section>
       <button class="primary" type="submit">Registrar solicitud</button>
     </form>
     <section class="card list-card">
@@ -39,9 +60,18 @@
           <div class="request-head"><div><h3>{{ solicitud.categoria }} · {{ solicitud.prioridad }}</h3><p>{{ solicitud.solicitante }} · {{ solicitud.correo }}</p></div><span class="badge">{{ solicitud.estado }}</span></div>
           <p class="description">{{ solicitud.descripcion }}</p>
           @if (solicitud.impacto) { <p class="impact">Impacto: {{ solicitud.impacto }}</p> }
+          @for (equipo of solicitud.equipos; track equipo.codigo) { <p class="equipment-info">{{ equipo.codigo }} · {{ equipo.ubicacion }}</p> }
           <label class="status">Cambiar estado<select [value]="solicitud.estado" (change)="cambiarEstado(solicitud.id, $any($event.target).value)">@for (estado of estados; track estado) { <option [value]="estado">{{ estado }}</option> }</select></label>
         </article>
       } @empty { <div class="empty"><span>✳</span><h3>Aún no hay solicitudes</h3><p>El primer registro aparecerá aquí.</p></div> }
     </section>
   </section>
+  @defer (on idle) {
+    <section class="deferred-summary" aria-label="Resumen de solicitudes">
+      <span>Recibidas o en revisión: <b>{{ pendientes() }}</b></span>
+      <span>Resueltas: <b>{{ total() - pendientes() }}</b></span>
+    </section>
+  } @placeholder {
+    <p class="defer-placeholder">Preparando resumen…</p>
+  }
 </main>
