@@ -1,5 +1,65 @@
 <main class="page">
   <header class="hero"><p class="eyebrow">Mesa de ayuda · Tecnología</p><h1>Solicitudes de soporte</h1><p>Registra un problema y consulta su estado de atención.</p></header>
+  <section class="card search-card" aria-labelledby="search-title">
+    <div class="section-title">
+      <div><p class="eyebrow">Taller 07 · RxJS y signals</p><h2 id="search-title">Buscar solicitudes</h2></div>
+      <span class="call-counter" aria-live="polite">Llamadas al servicio: <b>{{ llamadas() }}</b></span>
+    </div>
+    <label for="busqueda-solicitudes">Buscar en categoría y descripción
+      <input id="busqueda-solicitudes" type="search" autocomplete="off" [formControl]="busqueda" placeholder="Ej. sistema, correo o acceso" aria-describedby="search-message" />
+    </label>
+    <p id="search-message" class="search-message" aria-live="polite">
+      @if (estadoBusqueda() === 'minimo') { Escribe al menos 2 caracteres para consultar. }
+      @else if (estadoBusqueda() === 'buscando') { Buscando… }
+      @else if (estadoBusqueda() === 'vacio') { Sin coincidencias. }
+    </p>
+    <div class="search-toolbar">
+      <label for="filtro-solicitudes">Filtrar resultados por estado
+        <select id="filtro-solicitudes" [value]="filtroEstado()" (change)="cambiarFiltro($event)">
+          <option value="Todos">Todos</option>
+          @for (estado of estados; track estado) { <option [value]="estado">{{ estado }}</option> }
+        </select>
+      </label>
+      <span class="filter-note">El filtro no genera consultas nuevas.</span>
+    </div>
+    <dl class="search-summary" aria-label="Resumen de solicitudes visibles">
+      <div><dt>Total visible</dt><dd>{{ resumenBusqueda().total }}</dd></div>
+      <div><dt>Recibidas</dt><dd>{{ resumenBusqueda().recibidas }}</dd></div>
+      <div><dt>En revisión</dt><dd>{{ resumenBusqueda().enRevision }}</dd></div>
+      <div><dt>Resueltas</dt><dd>{{ resumenBusqueda().resueltas }}</dd></div>
+    </dl>
+    <section class="search-history" aria-labelledby="history-title">
+      <div class="history-heading"><h3 id="history-title">Historial de consultas</h3><span>Últimas 5</span></div>
+      @if (historial().length > 0) {
+        <ul aria-live="polite">
+          @for (consulta of historial(); track $index) {
+            <li><button type="button" (click)="repetirConsulta(consulta)">{{ consulta }}</button></li>
+          }
+        </ul>
+      } @else { <p>Las búsquedas realizadas aparecerán aquí.</p> }
+    </section>
+    <div class="search-table-wrap">
+      <table class="search-table">
+        <thead><tr><th scope="col">Código</th><th scope="col">Categoría</th><th scope="col">Descripción</th><th scope="col">Estado</th></tr></thead>
+        <tbody>
+          @if (estadoBusqueda() === 'buscando') {
+            <tr><td class="search-empty" colspan="4" role="status">Buscando solicitudes…</td></tr>
+          } @else if (estadoBusqueda() === 'minimo') {
+            <tr><td class="search-empty" colspan="4">Escribe al menos 2 caracteres para buscar.</td></tr>
+          } @else {
+            @for (solicitud of resultadosVisibles(); track solicitud.id) {
+              <tr>
+                <td class="search-code">{{ solicitud.id }}</td><td>{{ solicitud.categoria }}</td><td class="search-description">{{ solicitud.descripcion }}</td>
+                <td><span class="badge" [class.recibida]="solicitud.estado === 'Recibida'" [class.revision]="solicitud.estado === 'En revisión'" [class.resuelta]="solicitud.estado === 'Resuelta'">{{ solicitud.estado }}</span></td>
+              </tr>
+            } @empty {
+              <tr><td class="search-empty" colspan="4">Sin coincidencias para la búsqueda y el estado seleccionados.</td></tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
   <section class="layout">
     <form class="card form-card" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
       <div class="section-title"><div><p class="eyebrow">Nueva solicitud</p><h2>Cuéntanos qué ocurre</h2></div></div>

@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+:root { color-scheme: light; }
+body { margin: 0; }
+button,input,select { font: inherit; }
+.search-card { margin-bottom: 22px; }
+.call-counter { padding: 8px 11px; border-radius: 9px; background: #f2f5fa; color: #68758a; font-size: 11px; white-space: nowrap; }
+.call-counter b { color: #294b8d; font-size: 13px; }
+.search-card > label { margin-bottom: 4px; }
+.search-message { min-height: 17px; margin: 5px 0 12px; color: #68758a; font-size: 11px; }
+.search-toolbar { display:flex; align-items:end; gap:14px; margin: 0 0 12px; }
+.search-toolbar label { width: min(100%, 280px); margin: 0; }
+.search-toolbar select { padding: 8px 10px; }
+.filter-note { padding-bottom: 9px; color: #68758a; font-size: 11px; }
+.search-summary { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:0 0 14px; }
+.search-summary div { padding:10px 12px; border:1px solid #e4eaf3; border-radius:10px; background:#fbfcfe; }
+.search-summary dt { color:#68758a; font-size:10px; }
+.search-summary dd { margin:5px 0 0; color:#294b8d; font-size:18px; font-weight:800; }
+.search-history { margin-bottom:14px; }
+.history-heading { display:flex; align-items:baseline; gap:8px; margin-bottom:7px; }
+.history-heading h3 { margin:0; font-size:12px; }
+.history-heading span,.search-history p { margin:0; color:#79869b; font-size:10px; }
+.search-history ul { display:flex; flex-wrap:wrap; gap:6px; margin:0; padding:0; list-style:none; }
+.search-history button { padding:5px 9px; border:1px solid #dce3ee; border-radius:99px; background:#fff; color:#294b8d; cursor:pointer; font-size:10px; }
+.search-history button:hover { background:#edf3ff; }
+.search-table-wrap { overflow-x:auto; }
+.search-table { width:100%; border-collapse:collapse; text-align:left; }
+.search-table th,.search-table td { padding:10px 11px; border-top:1px solid #edf0f5; font-size:11px; vertical-align:top; }
+.search-table th { color:#69768c; font-size:9px; letter-spacing:.06em; text-transform:uppercase; }
+.search-code { color:#536fae; font-weight:800; white-space:nowrap; }
+.search-description { min-width:220px; color:#59677e; line-height:1.45; }
+.search-empty { padding:25px 12px !important; color:#79869b; text-align:center; }
+.badge.recibida { background:#edf3ff; color:#345790; }
+.badge.revision { background:#fff4df; color:#946414; }
+.badge.resuelta { background:#e8f6ef; color:#24714e; }
+@media(max-width:680px) {
+  .search-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .search-toolbar { align-items:stretch; flex-direction:column; gap:5px; }
+  .filter-note { padding:0; }
+  .search-table th,.search-table td { padding:9px 8px; }
+}
