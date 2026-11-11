@@ -1,32 +1,33 @@
-# Taller 06 · Mesa de ayuda de TI
+# Taller 06 y Taller 07 · Mesa de ayuda de TI
 
-Aplicación Angular de una sola pantalla para registrar solicitudes de soporte y seguir su estado. Escenario E1: Mesa de ayuda de TI.
+Extensión del proyecto del Taller 06 para registrar y dar seguimiento a solicitudes de soporte. El Taller 07 agrega una búsqueda reactiva sobre las solicitudes, con RxJS, signals y Angular standalone.
 
-## Ejecutar
+La búsqueda se realiza en los campos **categoría** y **descripción**. Ignora mayúsculas y tildes, recorta espacios y requiere al menos dos caracteres. La semilla inicial contiene 12 solicitudes y los estados Recibida, En revisión y Resuelta.
+
+## Requisitos
+
+- Node.js y npm
+
+## Instalar y ejecutar
 
 ```bash
-npm install
+npm ci
 npm start
 ```
 
-## Avance implementado
+Abre `http://localhost:4200/` en el navegador.
 
-- Angular standalone, sin rutas ni NgModule.
-- Formulario reactivo con solicitante, correo, categoría, prioridad, descripción e impacto.
-- Validadores integrados, validador propio contra texto compuesto solo por espacios y regla de grupo: prioridad crítica requiere impacto.
-- Servicio root con signal privada, asReadonly(), computed para total y pendientes, y actualización inmutable.
-- FormArray para equipos afectados, con agregar, quitar (conserva una fila como mínimo) y validadores en cada fila.
-- Listado con @for, @empty, seguimiento y cambio de estado.
-- Resumen diferido con @defer.
+## Compilar
 
-## Validaciones
+```bash
+npx ng build
+```
 
-- Campos obligatorios y correo con formato válido.
-- Descripción con mínimo de 10 caracteres.
-- Validador propio para rechazar textos compuestos solo por espacios.
-- Regla de grupo: una prioridad crítica exige explicar el impacto.
-- Equipos: código con formato EQ-001 y ubicación obligatoria.
+## Funciones del Taller 07
 
-## Estructura elegida
+- Servicio root con búsqueda observable, retardo simulado y contador de llamadas de solo lectura.
+- Búsqueda con `valueChanges`, `map(trim)`, `debounceTime(300)`, `distinctUntilChanged()` y `switchMap`.
+- Resultados conectados a signals; filtro por estado, resumen reactivo e historial de cinco consultas.
+- Mensajes de mínimo de caracteres, búsqueda en curso y ausencia de coincidencias.
 
-Se usan archivos separados para el modelo, el servicio, los validadores y la pantalla. Para el alcance de una sola pantalla, mantener una única plantilla evita introducir componentes adicionales; el modelo y las reglas se separan para que el servicio, los datos y las validaciones tengan responsabilidades claras.
+Los casos y resultados previstos para la semilla de ejemplo están documentados al final de este README.
